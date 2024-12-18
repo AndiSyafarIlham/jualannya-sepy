@@ -6,5 +6,7 @@ use Illuminate\Http\Request;
 
 class CheckoutController extends Controller
 {
-    //
+    function payment (Request $request) {
+        
+    }
 }

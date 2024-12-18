@@ -27,64 +27,41 @@
                 <td>Rp {{$order->product->price}}</td>
                 <td><span class="badge bg-{{$order->status == 'unpaid' ? 'danger' : 'success'}}">{{$order->status}}</span></td>
                 <td>
-                    @if($order->status == "unpaid")
-                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#payModal{{$order->id}}">
+                    <button type="button" id="pay-button-{{$order->id}}" class="btn btn-primary btn-sm pay-now-btn" data-order-id="{{$order->id}}">
                         Pay Now
                     </button>
-                    @endif
                 </td>
             </tr>
-            <div class="modal fade" id="payModal{{$order->id}}" tabindex="-1" aria-labelledby="modalLabel{{$order->id}}" aria-hidden="true">
-                <div class="modal-dialog">
-                    <form class="row g-3" action="{{route('pay')}}" method="post" enctype="multipart/form-data">
-                        <div class="modal-content rounded-3">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="modalLabel{{$order->id}}">Pay for Order: Rp {{$order->price}}</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <p>
-                                    Please make payment for the product <b>{{$order->product->name}}</b> and shipping fee <b>Rp.{{$order->price}},00</b> to <b>{{auth()->user()->name}}, DANA: 085291810469</b>
-                                </p>
-                                @csrf
-                                <input type="hidden" name="order_id" value="{{$order->id}}">
-                                <div id="preview-container" style="display: none; margin-top: 20px;">
-                                    <h4>Payment Proof Preview</h4>
-                                    <img id="preview-image" src="#" alt="Preview" class="img-fluid rounded" style="max-width: 100%; max-height: 200px;">
-                                </div>
-                                <div class="mb-3 mt-3">
-                                    <label for="formFile" class="form-label">Upload Payment Proof</label>
-                                    <input class="form-control" type="file" id="formFile" name="proof_of_payment">
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary">Submit Payment</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
             @endforeach
         </tbody>
     </table>
 </div>
 
-<script>
-    const fileInput = document.getElementById('formFile');
-    const previewContainer = document.getElementById('preview-container');
-    const previewImage = document.getElementById('preview-image');
+<script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('midtrans.client_key') }}"></script>
 
-    fileInput.addEventListener('change', (event) => {
-        const file = event.target.files[0];
-        const reader = new FileReader();
-
-        reader.onload = (event) => {
-            previewContainer.style.display = 'block';
-            previewImage.src = event.target.result;
-        };
-
-        reader.readAsDataURL(file);
+<script type="text/javascript">
+    @foreach($orders as $order)
+    document.getElementById('pay-button-{{$order->id}}').addEventListener('click', function () {
+        // Use the snapToken passed from the controller
+        window.snap.pay("d20c8fe4-9564-44b2-a7ca-77257afae678", {
+            onSuccess: function(result) {
+                alert("Payment success!");
+                console.log(result);
+            },
+            onPending: function(result) {
+                alert("Waiting for your payment!");
+                console.log(result);
+            },
+            onError: function(result) {
+                alert("Payment failed!");
+                console.log(result);
+            },
+            onClose: function () {
+                alert('You closed the popup without finishing the payment');
+            }
+        });
     });
+    @endforeach
 </script>
+
 @endsection

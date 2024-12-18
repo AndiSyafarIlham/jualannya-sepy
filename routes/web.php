@@ -60,9 +60,14 @@ Route::prefix('admin/dashboard')->middleware('ceklevel','auth')->group(function 
     });
     Route::prefix('order')->group(function (){
         Route::get('/',[\App\Http\Controllers\OrderController::class,'index'])->name('order-index');
+        Route::post('/checkout', [\App\Http\Controllers\OrderController::class, 'checkout'])->name('order-checkout');  // Add this route
         Route::get('/delete/{id}',[\App\Http\Controllers\OrderController::class,'destroy'])->name('order-delete');
         Route::get('/acc/{id}',[\App\Http\Controllers\OrderController::class,'acc'])->name('order-acc');
         Route::get('/cancel/{id}',[\App\Http\Controllers\OrderController::class,'cancel'])->name('order-cancel');
+        Route::get('/get-snap-token/{order}', [\App\Http\Controllers\OrderController::class, 'getSnapToken']);
+        Route::get('/order/{id}', [\App\Http\Controllers\OrderController::class, 'showOrderWithSnapToken'])->name('order.show');
+        Route::post('/webhook/midtrans', [\App\Http\Controllers\OrderController::class, 'webhook']);
+
     });
     
 });

@@ -1,7 +1,6 @@
 <?php
 
 return [
-    'merchant_id'=> env('MIDTRANS_CLIENT_KEY'),
     'serverKey'=> env('MIDTRANS_SERVER_KEY'),
     'client_key'=> env('MIDTRANS_CLIENT_KEY'),
     'isProduction' => env('MIDTRANS_IS_PRODUCTION'),

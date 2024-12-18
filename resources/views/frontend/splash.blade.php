@@ -1,11 +1,28 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to Sepy</title>
-    <link rel="shortcut icon" type="image/png" href="/sepy/logo-trans.png"/>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+@extends('frontend.main.master')
+
+@section('title', 'Home')
+
+@section('content')
+    <div class="splash-screen">
+        <!-- Logo -->
+        <img src="{{ asset('sepy/logo-trans.png') }}" alt="Sepy Logo" class="logo">
+        <div class="welcome-text">
+            <h1 style="color: #000; font-size: 2.5rem; margin-top: 20px; text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);">
+                Welcome to <span style="color: #ff6600;">Jualannya Sepy</span>
+            </h1>
+        </div>
+
+        <!-- Login Button -->
+        <a href="{{ url('/login') }}" class="login-btn">Login</a>
+    </div>
+
+    <!-- Redirect to login after animation -->
+    <script>
+        setTimeout(function() {
+            window.location.href = '{{ url('/login') }}';  // Automatically redirect after splash animation
+        }, 5000); // 5-second delay before redirection
+    </script>
+
     <style>
         /* General styling */
         body, html {
@@ -84,26 +101,4 @@
             }
         }
     </style>
-</head>
-<body>
-    <div class="splash-screen">
-        <!-- Logo -->
-        <img src="/sepy/logo-trans.png" alt="Sepy Logo" class="logo">
-        <div class="welcome-text">
-            <h1 style="color: #000; font-size: 2.5rem; margin-top: 20px; text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);">
-                Welcome to <span style="color: #ff6600;">Jualannya Sepy</span>
-            </h1>
-        </div>
-        
-        <!-- Login Button -->
-        <a href="/login" class="login-btn">Login</a>
-    </div>
-
-    <!-- Redirect to home after animation -->
-    <script>
-        setTimeout(function() {
-            window.location.href = '/login';  // Automatically redirect after splash animation
-        }, 5000); // Change this value if you want the redirect to happen after a different time (in milliseconds)
-    </script>
-</body>
-</html>
+@endsection
